@@ -10,6 +10,6 @@ The training data is included in the `data.csv` file at the root of the project.
 2. [Download](https://github.com/patrickeddy/apprecom/archive/master.zip) the ARI repository
 
 ```bash
-cd Downloads/ari
+cd ~/Downloads/ari
 npm start
 ```
