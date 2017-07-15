@@ -5,7 +5,7 @@ const DATA_FILE = "./src/data.csv";
 
 // Requires
 import AppRecom from 'apprecom';
-const AR = new AppRecom("./src/");
+const AR = new AppRecom();
 
 const fs = require('fs');
 const csv = require('csv');
