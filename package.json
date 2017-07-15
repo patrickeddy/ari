@@ -1,0 +1,20 @@
+{
+  "name": "ari",
+  "version": "1.0.0",
+  "description": "AppRecom Interactive - Location based app recommendation system",
+  "main": "./lib/apriori.js",
+  "scripts": {
+    "ari": "npm run build && node ./lib/ari.js",
+    "build": "babel src -d lib"
+  },
+  "author": "patrickeddy",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0"
+  },
+  "dependencies": {
+    "apprecom": "^0.8.0",
+    "csv": "^1.1.1"
+  }
+}
