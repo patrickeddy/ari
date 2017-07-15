@@ -1,11 +1,11 @@
 #! /usr/bin/env node
 
 // FILE PATHS
-const DATA_FILE = "./src/data.csv";
+const DATA_FILE = "data.csv";
 
 // Requires
 import AppRecom from 'apprecom';
-const AR = new AppRecom();
+const AR = new AppRecom(); // create the AppRecom object
 
 const fs = require('fs');
 const csv = require('csv');
@@ -29,27 +29,28 @@ main();
  */
 function main(){
   process.stdout.write('\x1Bc');
-  rl.write("ARI - AppRecom Interactive\nLocation based app recommendation system\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+  rl.write("ARI - AppRecom Interactive\nLocation based App recommendation algorithm\n\n");
   prompt();
 }
 
 function prompt(){
   rl.write("\nCHOOSE OPTION:\n");
-  rl.write("1 - mine data.csv for rules\n");
+  rl.write("1 - train on data.csv\n");
   rl.write("2 - get app recommendations\n");
   rl.write("q - quit\n\n");
   rl.question(": ", (answer)=>{
     if (hasSubStr(answer, "1")){
       readDataAndMine(); // mine
-    }
-    if (hasSubStr(answer, "2")){
+    }else if (hasSubStr(answer, "2")){
       rl.question("\nEnter a location category: ", (locationCategory)=>{
         getAppRecommendations(locationCategory);
       });
-    }
-    if (hasSubStr(answer, "q")){
+    } else if (hasSubStr(answer, "q")){
       const code = 0;
       process.exit(code);
+    } else {
+      print("\nHuh?");
+      prompt();
     }
   });
 }

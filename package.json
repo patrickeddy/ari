@@ -4,7 +4,7 @@
   "description": "AppRecom Interactive - Location based app recommendation system",
   "main": "./lib/apriori.js",
   "scripts": {
-    "start": "npm run build && node ./lib/ari.js",
+    "start": "npm install && npm run build && node ./lib/ari.js",
     "build": "babel src -d lib"
   },
   "author": "patrickeddy",
@@ -14,7 +14,7 @@
     "babel-preset-env": "^1.6.0"
   },
   "dependencies": {
-    "apprecom": "^0.8.2",
+    "apprecom": "^0.8.5",
     "csv": "^1.1.1"
   },
   "repository": {
