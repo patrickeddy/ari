@@ -68,7 +68,7 @@ function readDataAndMine(){
     csv.parse(data.replace(/,\s/g, ","), CSV_OPTIONS, (err, data)=>{
 
       // TRAIN RECOMMENDER
-      AR.train(data).then(()=>{
+      AR.train(data, 0.1, 0.8).then(()=>{
         print("=> Trained!");
         prompt();
       });
@@ -84,10 +84,10 @@ function getAppRecommendations(locationCategory){
 
   // GET THE RECOMMENDATION
   AR.getApps(locationCategory).then((apps)=>{
-    console.log("\n=> " + apps);
+    console.log("\nApp Recommendations:\n=> " + apps);
     prompt(); // prompt again
   }).catch((err)=>{
-    print("=> Error finding rules. Did you first call the train method?\n\n");
+    print("\n=> Error finding rules. Did you first call the train method?\n\n");
     prompt();
   });
 
