@@ -1,11 +1,17 @@
 #! /usr/bin/env node
 
+// SIMPLE CONFIGURATION
+const MIN_SUPPORT = 0.02;
+const MIN_CONFIDENCE = 0.8;
+const DEBUG = false; // Toggle this true or false for debug logs
+
 // FILE PATHS
 const DATA_FILE = "data.csv";
+const RULES_FILE = "./node_modules/apprecom/apprecom_rules.txt";
 
 // Requires
 import AppRecom from 'apprecom';
-const AR = new AppRecom(); // create the AppRecom object
+const AR = new AppRecom(DEBUG);
 
 const fs = require('fs');
 const csv = require('csv');
@@ -24,26 +30,42 @@ const CSV_OPTIONS = {
 
 main();
 
+function clear() {
+  process.stdout.write('\x1Bc');
+}
+
 /**
  * This program's main function.
  */
 function main(){
-  process.stdout.write('\x1Bc');
+  clear();
   rl.write("ARI - AppRecom Interactive\nLocation based App recommendation algorithm\n\n");
   prompt();
 }
 
 function prompt(){
   rl.write("\nCHOOSE OPTION:\n");
-  rl.write("1 - train on data.csv\n");
-  rl.write("2 - get app recommendations\n");
-  rl.write("q - quit\n\n");
+  rl.write("   1 - train on data.csv\n");
+  rl.write("   2 - get app recommendations\n");
+  rl.write("   q - quit\n\n");
   rl.question(": ", (answer)=>{
     if (hasSubStr(answer, "1")){
       readDataAndMine(); // mine
     }else if (hasSubStr(answer, "2")){
-      rl.question("\nEnter a location category: ", (locationCategory)=>{
-        getAppRecommendations(locationCategory);
+      fs.readFile(RULES_FILE, "utf-8", (err, data)=>{
+        if (err){
+          print("\nError finding rules. Did you first call the train method?\n\n");
+          prompt();
+        } else {
+          const locations = Object.keys(JSON.parse(data));
+          const promptMessage = `Enter a location category\n[${locations.toString().replace(/,/g, ", ")}]: `;
+
+          clear();
+          print("APP RECOMMENDATIONS\n");
+          rl.question(promptMessage, (locationCategory)=>{
+            getAppRecommendations(locationCategory);
+          });
+        }
       });
     } else if (hasSubStr(answer, "q")){
       const code = 0;
@@ -68,8 +90,8 @@ function readDataAndMine(){
     csv.parse(data.replace(/,\s/g, ","), CSV_OPTIONS, (err, data)=>{
 
       // TRAIN RECOMMENDER
-      AR.train(data, 0.1, 0.8).then(()=>{
-        print("=> Trained!");
+      AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE).then(()=>{
+        print("Trained!");
         prompt();
       });
 
@@ -84,10 +106,15 @@ function getAppRecommendations(locationCategory){
 
   // GET THE RECOMMENDATION
   AR.getApps(locationCategory).then((apps)=>{
-    console.log("\nApp Recommendations:\n=> " + apps);
+    let reply = `\nApp Recommendations for ${locationCategory.toUpperCase()}:\n`;
+    if (apps && apps.length > 0) {
+      for (const app in apps) reply += `\n   ${Number(app)+1}. ${apps[app]}`;
+    } else reply += "\n     None";
+    print(reply);
+    print("\n----------------------");
     prompt(); // prompt again
   }).catch((err)=>{
-    print("\n=> Error finding rules. Did you first call the train method?\n\n");
+    print(err);
     prompt();
   });
 
