@@ -1,9 +1,10 @@
 #! /usr/bin/env node
 
 // SIMPLE CONFIGURATION
-const MIN_SUPPORT = 0.02;
+const MIN_SUPPORT = 0.03;
 const MIN_CONFIDENCE = 0.8;
-const DEBUG = false; // Toggle this true or false for debug logs
+const TEST_RATIO = 0.9;
+const DEBUG = true; // Toggle this true or false for debug logs
 
 // FILE PATHS
 const DATA_FILE = "data.csv";
@@ -90,7 +91,7 @@ function readDataAndMine(){
     csv.parse(data.replace(/,\s/g, ","), CSV_OPTIONS, (err, data)=>{
 
       // TRAIN RECOMMENDER
-      AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE).then(()=>{
+      AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE, TEST_RATIO).then(()=>{
         print("Trained!");
         prompt();
       });
