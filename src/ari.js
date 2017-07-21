@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 
 // SIMPLE CONFIGURATION
-const MIN_SUPPORT = 0.03;
-const MIN_CONFIDENCE = 0.8;
+const MIN_SUPPORT = 0.02;
+const MIN_CONFIDENCE = 0.4;
 const TEST_RATIO = 0.9;
-const DEBUG = true; // Toggle this true or false for debug logs
+const DEBUG = false; // Toggle this true or false for debug logs
 
 // FILE PATHS
 const DATA_FILE = "data.csv";
