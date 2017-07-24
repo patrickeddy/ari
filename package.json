@@ -14,11 +14,11 @@
     "babel-preset-env": "^1.6.0"
   },
   "dependencies": {
-    "apprecom": "0.9.41",
+    "apprecom": "^0.9.5",
     "csv": "^1.1.1"
   },
   "repository": {
-  "type": "git",
-  "url": "git+https://github.com/patrickeddy/ari.git"
+    "type": "git",
+    "url": "git+https://github.com/patrickeddy/ari.git"
   }
 }

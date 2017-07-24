@@ -13,6 +13,7 @@ const RULES_FILE = "./node_modules/apprecom/apprecom_rules.txt";
 // Requires
 import AppRecom from 'apprecom';
 const AR = new AppRecom(DEBUG);
+let ARRules = {};
 
 const fs = require('fs');
 const csv = require('csv');
@@ -53,21 +54,20 @@ function prompt(){
     if (hasSubStr(answer, "1")){
       readDataAndMine(); // mine
     }else if (hasSubStr(answer, "2")){
-      fs.readFile(RULES_FILE, "utf-8", (err, data)=>{
-        if (err){
-          print("\nError finding rules. Did you first call the train method?\n\n");
-          prompt();
-        } else {
-          const locations = Object.keys(JSON.parse(data));
-          const promptMessage = `Enter a location category\n[${locations.toString().replace(/,/g, ", ")}]: `;
+      const locations = Object.keys(AR.rules);
+      // We have locations
+      if (locations && locations.length > 0){
+        const promptMessage = `Enter a location category\n[${locations.toString().replace(/,/g, ", ")}]: `;
 
-          clear();
-          print("APP RECOMMENDATIONS\n");
-          rl.question(promptMessage, (locationCategory)=>{
-            getAppRecommendations(locationCategory);
-          });
-        }
-      });
+        clear();
+        print("APP RECOMMENDATIONS\n");
+        rl.question(promptMessage, (locationCategory)=>{
+          getAppRecommendations(locationCategory);
+        });
+      } else { // didn't find locations
+        print("\nTrain the recommender first.");
+        prompt();
+      }
     } else if (hasSubStr(answer, "q")){
       const code = 0;
       process.exit(code);
@@ -91,10 +91,9 @@ function readDataAndMine(){
     csv.parse(data.replace(/,\s/g, ","), CSV_OPTIONS, (err, data)=>{
 
       // TRAIN RECOMMENDER
-      AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE, TEST_RATIO).then(()=>{
-        print("Trained!");
-        prompt();
-      });
+      AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE, TEST_RATIO);
+      print("Trained!");
+      prompt();
 
     });
   });
@@ -106,19 +105,15 @@ function readDataAndMine(){
 function getAppRecommendations(locationCategory){
 
   // GET THE RECOMMENDATION
-  AR.getApps(locationCategory).then((apps)=>{
-    let reply = `\nApp Recommendations for ${locationCategory.toUpperCase()}:\n`;
-    if (apps && apps.length > 0) {
-      for (const app in apps) reply += `\n   ${Number(app)+1}. ${apps[app]}`;
-    } else reply += "\n     None";
-    print(reply);
-    print("\n----------------------");
-    prompt(); // prompt again
-  }).catch((err)=>{
-    print(err);
-    prompt();
-  });
+  const apps = AR.getApps(locationCategory);
 
+  let reply = `\nApp Recommendations for ${locationCategory.toUpperCase()}:\n`;
+  if (apps && apps.length > 0) {
+    for (const app in apps) reply += `\n   ${Number(app)+1}. ${apps[app]}`;
+  } else reply += "\n     None";
+  print(reply);
+  print("\n----------------------");
+  prompt(); // prompt again
 }
 
 // Helper functions
