@@ -7,8 +7,7 @@ const TEST_RATIO = 0.9;
 const DEBUG = false; // Toggle this true or false for debug logs
 
 // FILE PATHS
-const DATA_FILE = "data.csv";
-const RULES_FILE = "./node_modules/apprecom/apprecom_rules.txt";
+const DATA_FILE = "big_data.csv";
 
 // Requires
 import AppRecom from 'apprecom';
@@ -89,7 +88,7 @@ function readDataAndMine(){
   fs.readFile(DATA_FILE, CSV_ENCODING, (err, data)=>{
     if (err) throw console.log(err); // throw an error if couldn't read
     csv.parse(data.replace(/,\s/g, ","), CSV_OPTIONS, (err, data)=>{
-
+      if (err) throw console.log(err);
       // TRAIN RECOMMENDER
       AR.train(data, MIN_SUPPORT, MIN_CONFIDENCE, TEST_RATIO);
       print("Trained!");
