@@ -7,7 +7,7 @@ const TEST_RATIO = 0.9;
 const DEBUG = false; // Toggle this true or false for debug logs
 
 // FILE PATHS
-const DATA_FILE = "big_data.csv";
+const DATA_FILE = "data.csv";
 
 // Requires
 import AppRecom from 'apprecom';
